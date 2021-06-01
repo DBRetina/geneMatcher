@@ -25,7 +25,8 @@ setup(
         'Click',
         'kProcessor',
         'kSpider2',
-        'tqdm'
+        'tqdm',
+        'requests'
     ],
     entry_points={
         'console_scripts': [
