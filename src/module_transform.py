@@ -18,7 +18,7 @@ def open_url(ctx, param, value):
 
 @click.pass_context
 def transform(ctx, fasta_file, reference_nickname):
-    '''Downloading module'''
+    '''Transform downloaded files'''
     LOGGER = ctx.obj
 
     if not reference_nickname:
