@@ -8,13 +8,13 @@ import requests
 import subprocess
 
 
-@cli.command(name="pairwise", help_priority=5)
+@cli.command(name="filter", help_priority=5)
 @click.option('-i', '--index-prefix', 'index_prefix', required=True, type=click.STRING, help="kProcessor index file prefix")
 @click.option('-j', '--min-jac', 'jaccard', required=True, type=click.INT, help="minimum jaccard similarity %")
 @click.option('-c', '--min-cont', 'containment', required=True, type=click.INT, help="minimum containment similarity %")
 @click.pass_context
 def filtering(ctx, index_prefix, jaccard, containment):
-    '''Generate pairwise similarity matrix'''
+    '''Filtering with jaccard and containment'''
     LOGGER = ctx.obj
     LOGGER.INFO(f"Filtering the results with min jaccard = {jaccard}, min containment = {containment} ...")
 
