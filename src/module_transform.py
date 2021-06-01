@@ -15,9 +15,8 @@ def open_url(ctx, param, value):
 @cli.command(name="transform", help_priority=2)
 @click.option('-f', '--fasta', "fasta_file", required=True, type=click.Path(exists=True), help="FASTA file")
 @click.option('-n', '--nickname', "reference_nickname", required=False, default=None, help="reference nickname")
-
 @click.pass_context
-def transform(ctx, fasta_file, reference_nickname):
+def transform_cli(ctx, fasta_file, reference_nickname):
     '''Transform downloaded files'''
     LOGGER = ctx.obj
 

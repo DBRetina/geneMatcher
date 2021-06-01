@@ -33,7 +33,7 @@ def keepTheGreatest(current_list, new_gene):
 @click.option('-n', '--ref2_nickname', "ref2_nickname", required=False, default=None, help="reference_2 nickname")
 @click.option('-r', '--rel', "relations_file", required=True, type=click.Path(exists=True), help="kSpider relations TSV")
 @click.pass_context
-def match(ctx, ref1_nickname, ref2_nickname, relations_file):
+def match_cli(ctx, ref1_nickname, ref2_nickname, relations_file):
     '''Generate best mutual matches'''
     LOGGER = ctx.obj
     LOGGER.INFO(f"Processing ..")

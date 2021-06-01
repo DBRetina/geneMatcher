@@ -16,7 +16,7 @@ def open_url(ctx, param, value):
 @click.option('-u', '--url', "url", required=True, help="URL")
 @click.option('-o', '--output', "output", required=False, default=None, help="download output file (omit gz to uncompress)")
 @click.pass_context
-def download(ctx, url, output):
+def download_cli(ctx, url, output):
     '''Downloading module'''
     LOGGER = ctx.obj
 

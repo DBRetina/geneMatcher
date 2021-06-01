@@ -74,7 +74,7 @@ def validate_kSize(ctx, param, value):
 @click.option('--canonical', is_flag=True, help = "strand non-specific")
 @click.option('-o', '--output', "output_prefix", required=False, default=None, help="index output file prefix")
 @click.pass_context
-def kmers(ctx, fasta_file, names_file, kSize, chunkSize, canonical, output_prefix):
+def kmers_cli(ctx, fasta_file, names_file, kSize, chunkSize, canonical, output_prefix):
     '''FASTA file indexing by Kmers'''
 
     if not output_prefix:

@@ -11,7 +11,7 @@ import subprocess
 @cli.command(name="pairwise", help_priority=4)
 @click.option('-i', '--index-prefix', 'index_prefix', required=True, type=click.STRING, help="kProcessor index file prefix")
 @click.pass_context
-def pairwise(ctx, index_prefix):
+def pairwise_cli(ctx, index_prefix):
     '''Generate pairwise similarity matrix'''
     LOGGER = ctx.obj
     LOGGER.INFO(f"Generating pairwise similarity matrix\nPlease wait ...")
