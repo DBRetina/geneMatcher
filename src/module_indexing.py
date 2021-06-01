@@ -66,7 +66,7 @@ def validate_kSize(ctx, param, value):
 
 
 
-@cli.command(name="index", help_priority=1)
+@cli.command(name="index", help_priority=3)
 @click.option('-f', '--fasta', "fasta_file", required=True, type=click.Path(exists=True), help="FASTA file")
 @click.option('-n', '--names', "names_file", required=True, type=click.Path(exists=True), help="Names file")
 @click.option('-k', '--kmer-size', "kSize", callback=validate_kSize, required=True, type=click.IntRange(7, 31, clamp=False), help="kmer size")
