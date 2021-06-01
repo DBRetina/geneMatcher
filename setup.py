@@ -24,7 +24,7 @@ setup(
     install_requires=[
         'Click',
         'kProcessor',
-        'kSpider',
+        'kSpider2',
         'tqdm'
     ],
     entry_points={
