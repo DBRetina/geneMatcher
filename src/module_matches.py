@@ -39,9 +39,7 @@ def match_cli(ctx, ref1_nickname, ref2_nickname, relations_file):
     LOGGER.INFO(f"Processing ..")
 
     tr1_prefix = ref1_nickname
-    tr2_prefix = sys.argv[2]
-    file1 = ref2_nickname
-
+    tr2_prefix = ref2_nickname
 
     tr1_tr1 = dict()
     tr1_tr2 = dict()
@@ -49,7 +47,7 @@ def match_cli(ctx, ref1_nickname, ref2_nickname, relations_file):
     tr2_tr2 = dict()
     tr2_tr1 = dict()
 
-    with open(file1) as READER:
+    with open(relations_file) as READER:
         next(READER)
         for line in READER:
             line = line.split('|')

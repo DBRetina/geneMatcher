@@ -8,6 +8,7 @@ from src.module_transform import transform_cli
 from src.module_pairwise import pairwise_cli
 from src.module_filtering import filtering_cli
 from src.module_matches import match_cli
+from src.module_all import auto_cli
 
 
 
@@ -18,6 +19,8 @@ cli.add_command(transform_cli, name="transform")
 cli.add_command(pairwise_cli, name="pairwise")
 cli.add_command(filtering_cli, name="filter")
 cli.add_command(match_cli, name="match")
+cli.add_command(auto_cli, name="auto")
+
 
 
 
