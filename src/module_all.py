@@ -2,6 +2,7 @@
 import sys
 import os
 import click
+from click.decorators import pass_context
 from src.click_context import cli
 from src.module_download import download_cli
 from src.module_indexing import kmers_cli as index_kmers
@@ -16,8 +17,12 @@ import subprocess
 import re
 from glob import glob
 import multiprocessing
+from itertools import product
 
-def auto(ctx, ref1_url, ref2_url, kSize, jaccard, containment, all_fasta_files):
+@click.pass_context
+def auto(ctx, args):
+    # print(args)
+    ref1_url, ref2_url, kSize, jaccard, containment, all_fasta_files = args
     LOGGER = ctx.obj
 
     all_fasta_files = '-'.join(all_fasta_files)
@@ -73,9 +78,10 @@ def auto(ctx, ref1_url, ref2_url, kSize, jaccard, containment, all_fasta_files):
 
     # Matching
     LOGGER.INFO(f"Matching {ref1_nickname} vs. {ref2_nickname}")
-    if f"{ref1_nickname}_matches.tsv" in all_fasta_files:
+    if f"{ref1_nickname}_matches.tsv" not in all_fasta_files:
         ctx.invoke(match_cli, ref1_nickname = ref1_nickname, ref2_nickname = ref2_nickname, relations_file = f"{idx_prefix}_relations.csv")
 
+    LOGGER.SUCCESS(f"Processing done for {ref1_nickname} vs. {ref2_nickname}")
 
 
 
@@ -91,10 +97,13 @@ def auto_cli(ctx, kSize, refs_tsv, jaccard, containment, cores):
 
     all_files = glob('./*')
 
-    # Downloading
+    inputs = list()
+    
     with open(refs_tsv) as TSV:
         for line in TSV:
             ref1_url, ref2_url = tuple(line.split('\t'))
-            auto(ctx, ref1_url, ref2_url, kSize, jaccard, containment, all_files)
+            inputs.append((ref1_url, ref2_url, kSize, jaccard, containment, all_files))
 
 
+    with multiprocessing.Pool(processes=cores) as pool:
+        pool.map(auto, inputs)
