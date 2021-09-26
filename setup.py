@@ -23,7 +23,7 @@ setup(
     python_requires='>=3.6',
     install_requires=[
         'Click',
-        'kProcessor',
+        'kProcessor==1.2.0',
         'kSpider2',
         'tqdm',
         'requests'

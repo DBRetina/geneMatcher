@@ -16,24 +16,24 @@ import requests
 import subprocess
 import re
 from glob import glob
-import multiprocessing
 from itertools import product
 
+
 @click.pass_context
-def auto(ctx, args):
+def auto(ctx, *args):
     # print(args)
     ref1_url, ref2_url, kSize, jaccard, containment, all_fasta_files = args
     LOGGER = ctx.obj
 
     all_fasta_files = '-'.join(all_fasta_files)
 
-    _ref1_basename = os.path.basename(ref1_url).replace('.gz', '')
-    _ref2_basename = os.path.basename(ref2_url).replace('.gz', '')
+    _ref1_basename = os.path.basename(ref1_url).replace('.gz', '').strip()
+    _ref2_basename = os.path.basename(ref2_url).replace('.gz', '').strip()
     _common_substr = list(set(_ref1_basename.split('.')).intersection(set(_ref2_basename.split('.'))))
     _common_substr.append(".")
 
-    ref1_nickname = re.sub(r'|'.join(map(re.escape, _common_substr)), '', _ref1_basename).upper()
-    ref2_nickname = re.sub(r'|'.join(map(re.escape, _common_substr)), '', _ref2_basename).upper()
+    ref1_nickname = re.sub(r'|'.join(map(re.escape, _common_substr)), '', _ref1_basename).replace('.fa','').upper()
+    ref2_nickname = re.sub(r'|'.join(map(re.escape, _common_substr)), '', _ref2_basename).replace('.fa','').upper()
 
 
     if _ref1_basename not in all_fasta_files:
@@ -52,7 +52,7 @@ def auto(ctx, args):
         ctx.invoke(transform_cli, fasta_file = _ref2_basename, reference_nickname = ref2_nickname)
 
     ## Merging files for indexing
-    merged_file_name = f"merged_{ref1_nickname}_{ref1_nickname}"
+    merged_file_name = f"merged_{ref1_nickname}_{ref2_nickname}"
 
     if f"{merged_file_name}.fa" not in all_fasta_files:
         LOGGER.INFO(f"Merging files for kProcessor index")
@@ -85,25 +85,19 @@ def auto(ctx, args):
 
 
 
-@cli.command(name="auto", help_priority=2)
+@cli.command(name="auto", help_priority=1)
 @click.option('--refs-tsv', "refs_tsv", required=True, type=click.Path(exists=True), help="FASTA file")
-@click.option('--cores', "cores", required=False, default = 1, type=click.INT, help="number of cores")
 @click.option('-j', '--min-jac', 'jaccard', required=True, type=click.INT, help="minimum jaccard similarity %")
 @click.option('-c', '--min-cont', 'containment', required=True, type=click.INT, help="minimum containment similarity %")
 @click.option('-k', '--kmer-size', "kSize", callback=validate_kSize, required=True, type=click.IntRange(7, 31, clamp=False), help="kmer size")
 @click.pass_context
-def auto_cli(ctx, kSize, refs_tsv, jaccard, containment, cores):
+def auto_cli(ctx, kSize, refs_tsv, jaccard, containment):
     '''Automate the whole pipeline'''
 
     all_files = glob('./*')
-
-    inputs = list()
     
     with open(refs_tsv) as TSV:
         for line in TSV:
             ref1_url, ref2_url = tuple(line.split('\t'))
-            inputs.append((ref1_url, ref2_url, kSize, jaccard, containment, all_files))
-
-
-    with multiprocessing.Pool(processes=cores) as pool:
-        pool.map(auto, inputs)
+            ctx.obj.INFO(f"Processing {ref1_url} vs. {ref2_url}")
+            auto(ref1_url, ref2_url, kSize, jaccard, containment, all_files)
